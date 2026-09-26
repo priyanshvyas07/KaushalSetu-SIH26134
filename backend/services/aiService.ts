@@ -670,7 +670,16 @@ CORE INSTRUCTIONS:
    - Do not invent fake numerical data or fake company vacancies.
    - Keep answers practical, structured, and helpful.`;
 
-  const userPrompt = query;
+  let langDirective = '';
+  if (detectedLang === 'english') {
+    langDirective = `\n\n(LANGUAGE DIRECTIVE: The student's current message is in English. You MUST respond completely in English. Do not use Hindi or Hinglish.)`;
+  } else if (detectedLang === 'hinglish') {
+    langDirective = `\n\n(LANGUAGE DIRECTIVE: The student's current message is in Hinglish. Respond naturally in conversational Hinglish in Latin script.)`;
+  } else if (detectedLang === 'hindi') {
+    langDirective = `\n\n(LANGUAGE DIRECTIVE: The student's current message is in Hindi. Respond in Hindi Devanagari script.)`;
+  }
+
+  const userPrompt = `${query}${langDirective}`;
 
   const liveResult = await aiProvider.generateText(userPrompt, systemPrompt, history);
 
